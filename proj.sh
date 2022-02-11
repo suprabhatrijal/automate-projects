@@ -12,8 +12,8 @@ done
 
 if [[ $mode = "create" ]]; then
 	if [[ $project = "python" ]]; then
-		path="/home/suppe/programming/PycharmProjects
-		"		mkdir "$path/$2"
+		path="/home/suppe/programming/PycharmProjects"
+		mkdir "$path/$2"
 		cd "$path/$2"
 		python3 -m virtualenv venv 
 	elif [[ $project = "flutter" ]]; then
@@ -32,7 +32,6 @@ if [[ $mode = "create" ]]; then
 	git pull origin main --rebase
 	git push origin main
 
-		
 elif [[ $mode = "open" && $project = "python" ]]; then
 		cd "/home/suppe/programming/PycharmProjects/"
 		echo "Python Projects:" 
@@ -68,6 +67,40 @@ elif [[ $mode = "open" && $project = "flutter" ]]; then
 		file=${list_of_dirs[@]:index:1}	
 		cd "/home/suppe/programming/FlutterProjects/$file"
 		clear
+		vim
+elif [[ $mode = "open" && $project = "python" ]]; then
+		cd "/home/suppe/programming/PycharmProjects/"
+		echo "Python Projects:" 
+		echo "============================================================================================================================" 
+		num=1
+		list_of_dirs=()
+		for d in */ ; do
+		echo "$num: $d"
+			let "num += 1"
+			list_of_dirs+=($d)
+		done
+		echo "============================================================================================================================" 
+		read option
+		index=option-1
+		file=${list_of_dirs[@]:index:1}	
+		cd "/home/suppe/programming/PycharmProjects/$file"
+		vim
+elif [[ $mode = "open" && $project = "flutter" ]]; then
+		cd "/home/suppe/programming/FlutterProjects"
+		echo "Flutter Projects:" 
+		echo "============================================================================================================================"
+		num=1
+		list_of_dirs=()
+		for d in */ ; do
+			echo "$num: $d"
+			let "num += 1"
+			list_of_dirs+=($d)
+		done
+		echo "============================================================================================================================"
+		read option
+		index=option-1
+		file=${list_of_dirs[@]:index:1}	
+		cd "/home/suppe/programming/FlutterProjects/$file"
 		vim 
 elif [[ $mode = "remove" && $project = "python" ]]; then
 		cd "/home/suppe/programming/PycharmProjects"
