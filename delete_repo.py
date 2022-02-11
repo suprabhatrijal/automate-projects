@@ -1,9 +1,10 @@
 import sys
+import os
 from github import Github
 
-
 def delete_repository(name):
-    key = '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'
+    key = os.environ.get( "GITHUB_PERSONAL_ACCESS_TOKEN_PROJ" ) 
+    # key = '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'
     try:
         repo = Github(key).get_repo(name)
         repo.delete()
