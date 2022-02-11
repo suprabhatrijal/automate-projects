@@ -1,9 +1,11 @@
 import sys
+import os
 from github import Github
 
 
 def create_new_repository(type, name):
-    key = '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'
+    key = os.environ.get('GITHUB_PERSONAL_ACCESS_TOKEN_PROJ') 
+    # key = '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'
     user = Github(key).get_user()
     try:
         if(type == "python"):
