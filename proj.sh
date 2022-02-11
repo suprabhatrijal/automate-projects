@@ -1,4 +1,11 @@
 #!/bin/bash
+
+# variables
+line="============================================================================================================================" 
+python_path="/home/suppe/programming/PycharmProjects"
+flutter_path="/home/suppe/programming/FlutterProjects"
+
+# flags
 while getopts cropf flag
 do
 		case "${flag}" in
@@ -9,33 +16,45 @@ do
 				f) project="flutter";;
 		esac
 done
+# flags
 
+# create
 if [[ $mode = "create" ]]; then
-	if [[ $project = "python" ]]; then
-		path="/home/suppe/programming/PycharmProjects"
-		mkdir "$path/$2"
-		cd "$path/$2"
-		python3 -m virtualenv venv 
-	elif [[ $project = "flutter" ]]; then
-		path="/home/suppe/programming/FlutterProjects"
-		cd "$path"
-		flutter create $2
-		cd "$path/$2"
+	# if the user has entered a project name
+	if [[ $2 != "" ]]; then
+		# python
+		if [[ $project = "python" ]]; then
+			path="/home/suppe/programming/PycharmProjects"
+			mkdir "$python_path/$2"
+			cd "$python_path/$2"
+			python3 -m virtualenv venv 
+		# flutter
+		elif [[ $project = "flutter" ]]; then
+			cd "$flutter_path"
+			flutter create $2
+			cd "$flutter_path/$2"
+		fi
+		touch README.md
+		python3 /home/suppe/programming/PycharmProjects/automate_projects/create_new_repo.py $project $2
+		git init
+		git remote add origin git@github.com:suprabhatrijal/$2.git
+		git add -A
+		git commit -m "Initial Commit"
+		git pull origin main --rebase
+		git push origin main		
+	# if the user has not entered a project name
+	else
+		echo "Enter a name for the project"
 	fi
+# create
 
-	touch README.md
-	python3 /home/suppe/programming/PycharmProjects/automate_projects/create_new_repo.py $project $2
-	git init
-	git remote add origin git@github.com:suprabhatrijal/$2.git
-	git add -A
-	git commit -m "Initial Commit"
-	git pull origin main --rebase
-	git push origin main
-
-elif [[ $mode = "open" && $project = "python" ]]; then
-		cd "/home/suppe/programming/PycharmProjects/"
+# open
+elif [[ $mode = "open" ]]; then
+	# python
+	if [[ $project == "python" ]]; then
+		cd $python_path
 		echo "Python Projects:" 
-		echo "============================================================================================================================" 
+		echo $line
 		num=1
 		list_of_dirs=()
 		for d in */ ; do
@@ -43,17 +62,18 @@ elif [[ $mode = "open" && $project = "python" ]]; then
 			let "num += 1"
 			list_of_dirs+=($d)
 		done
-		echo "============================================================================================================================" 
+		echo $line
 		read option
 		index=option-1
 		file=${list_of_dirs[@]:index:1}	
-		cd "/home/suppe/programming/PycharmProjects/$file"
+		cd "$python_path/$file"
 		clear
 		vim
-elif [[ $mode = "open" && $project = "flutter" ]]; then
-		cd "/home/suppe/programming/FlutterProjects"
+	# flutter
+	elif [[ $project = "flutter" ]]; then
+		cd $flutter_path
 		echo "Flutter Projects:" 
-		echo "============================================================================================================================"
+		echo $line
 		num=1
 		list_of_dirs=()
 		for d in */ ; do
@@ -61,17 +81,23 @@ elif [[ $mode = "open" && $project = "flutter" ]]; then
 			let "num += 1"
 			list_of_dirs+=($d)
 		done
-		echo "============================================================================================================================"
+		echo $line		
 		read option
 		index=option-1
 		file=${list_of_dirs[@]:index:1}	
-		cd "/home/suppe/programming/FlutterProjects/$file"
+		cd "$flutter_path/$file"
 		clear
-		vim
-elif [[ $mode = "open" && $project = "python" ]]; then
-		cd "/home/suppe/programming/PycharmProjects/"
+		vim	
+	fi
+# open
+
+# remove
+elif [[ $mode = "remove" ]]; then
+	# python
+	if [[ $project == "python" ]]; then
+		cd $python_path
 		echo "Python Projects:" 
-		echo "============================================================================================================================" 
+		echo $line
 		num=1
 		list_of_dirs=()
 		for d in */ ; do
@@ -79,16 +105,23 @@ elif [[ $mode = "open" && $project = "python" ]]; then
 			let "num += 1"
 			list_of_dirs+=($d)
 		done
-		echo "============================================================================================================================" 
+		echo $line
 		read option
 		index=option-1
 		file=${list_of_dirs[@]:index:1}	
-		cd "/home/suppe/programming/PycharmProjects/$file"
-		vim
-elif [[ $mode = "open" && $project = "flutter" ]]; then
-		cd "/home/suppe/programming/FlutterProjects"
+		echo "Are you sure you want to delete /home/suppe/programming/PycharmProjects/$file permanently? [Y/n]"
+		read choice
+		if [[ $choice = "Y" ]]; then
+			rm -rf "$python_path/$file"
+			python3 /home/suppe/programming/PycharmProjects/automate_projects/delete_repo.py $file
+		else
+			echo "Aborted"
+		fi
+	# flutter
+	elif [[ $project = "flutter" ]]; then
+		cd $flutter_path		
 		echo "Flutter Projects:" 
-		echo "============================================================================================================================"
+		echo $line
 		num=1
 		list_of_dirs=()
 		for d in */ ; do
@@ -96,56 +129,18 @@ elif [[ $mode = "open" && $project = "flutter" ]]; then
 			let "num += 1"
 			list_of_dirs+=($d)
 		done
-		echo "============================================================================================================================"
-		read option
-		index=option-1
-		file=${list_of_dirs[@]:index:1}	
-		cd "/home/suppe/programming/FlutterProjects/$file"
-		vim 
-elif [[ $mode = "remove" && $project = "python" ]]; then
-		cd "/home/suppe/programming/PycharmProjects"
-		echo "Python Projects:" 
-		echo "============================================================================================================================"
-		num=1
-		list_of_dirs=()
-		for d in */ ; do
-			echo "$num: $d"
-			let "num += 1"
-			list_of_dirs+=($d)
-		done
-		echo "============================================================================================================================"
+		echo $line
 		read option
 		index=option-1
 		file=${list_of_dirs[@]:index:1}	
 		echo "Are you sure you want to delete /home/suppe/programming/FlutterProjects/$file permanently? [Y/n]"
 		read choice
 		if [[ $choice = "Y" ]]; then
-			rm -rf "/home/suppe/programming/PycharmProjects/$file"
+			rm -rf "$flutter_path/$file"
 			python3 /home/suppe/programming/PycharmProjects/automate_projects/delete_repo.py $file
 		else
 			echo "Aborted"
 		fi
-elif [[ $mode = "remove" && $project = "flutter" ]]; then
-		cd "/home/suppe/programming/FlutterProjects"
-		echo "Flutter Projects:" 
-		echo "============================================================================================================================"
-		num=1
-		list_of_dirs=()
-		for d in */ ; do
-			echo "$num: $d"
-			let "num += 1"
-			list_of_dirs+=($d)
-		done
-		echo "============================================================================================================================"
-		read option
-		index=option-1
-		file=${list_of_dirs[@]:index:1}	
-		echo "Are you sure you want to delete /home/suppe/programming/FlutterProjects/$file permanently? [Y/n]"
-		read choice
-		if [[ $choice = "Y" ]]; then
-			rm -rf "/home/suppe/programming/FlutterProjects/$file"
-			python3 /home/suppe/programming/PycharmProjects/automate_projects/delete_repo.py $file
-		else
-			echo "Aborted"
-		fi
+	fi
+# remove
 fi
