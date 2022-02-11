@@ -10,11 +10,10 @@ do
 		esac
 done
 
-
 if [[ $mode = "create" ]]; then
 	if [[ $project = "python" ]]; then
-		path="/home/suppe/programming/PycharmProjects"
-		mkdir "$path/$2"
+		path="/home/suppe/programming/PycharmProjects
+		"		mkdir "$path/$2"
 		cd "$path/$2"
 		python3 -m virtualenv venv 
 	elif [[ $project = "flutter" ]]; then
@@ -50,6 +49,7 @@ elif [[ $mode = "open" && $project = "python" ]]; then
 		index=option-1
 		file=${list_of_dirs[@]:index:1}	
 		cd "/home/suppe/programming/PycharmProjects/$file"
+		clear
 		vim
 elif [[ $mode = "open" && $project = "flutter" ]]; then
 		cd "/home/suppe/programming/FlutterProjects"
@@ -67,6 +67,7 @@ elif [[ $mode = "open" && $project = "flutter" ]]; then
 		index=option-1
 		file=${list_of_dirs[@]:index:1}	
 		cd "/home/suppe/programming/FlutterProjects/$file"
+		clear
 		vim 
 elif [[ $mode = "remove" && $project = "python" ]]; then
 		cd "/home/suppe/programming/PycharmProjects"
