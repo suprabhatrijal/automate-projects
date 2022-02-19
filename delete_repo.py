@@ -4,7 +4,6 @@ from github import Github
 
 def delete_repository(name):
     key = os.environ.get( "GITHUB_PERSONAL_ACCESS_TOKEN_PROJ" ) 
-    # key = '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'
     try:
         user = Github(key).get_user()
         repo = user.get_repo(name)
